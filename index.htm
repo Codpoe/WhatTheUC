@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>What The UC</title>
+  <meta name="theme-color" content="#4a148c">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  <link rel="stylesheet" href="css/materialize.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+  <div id="app">
+
+    <nav class="nav-extended">
+    <div class="nav-wrapper purple darken-4">
+      <a href="#" class="brand-logo">{{ title }}</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li v-for="menu in menus">
+          <a href="{{ menu.link }}">{{ menu.text }}</a>
+        </li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li v-for="menu in menus">
+          <a href="{{ menu.link }}">{{ menu.text }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-content">
+        <ul id="tabs-swipe" class="tabs tabs-transparent purple darken-4">
+            <li class="tab"><a class="active" href="#test-swipe-1">标题头部格式</a></li>
+            <li class="tab"><a href="#test-swipe-2">标题尾部格式</a></li>
+            <li class="tab"><a href="#test-swipe-3">新闻参数</a></li>
+        </ul>
+    </div>
+    </nav>
+
+    <div class="fixed-action-btn">
+      <a class="btn-floating btn-large waves-effect waves-light pink z-depth-3" href="#modal1" v-on:click='get_result'>
+        <i class="large material-icons">done</i>
+      </a>
+    </div>
+
+    <div class="row">
+      <div id="test-swipe-1" class="col s12">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="震惊！" id="exclamation" type="text" class="validate" v-model="exclamation">
+              <label for="exclamation">感叹语</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <select id="header">
+                <option value="" disabled selected>选择标题头部</option>
+                <option v-for="choice in header_choices" v-bind:value="choice.text">{{ choice.text }}</option>
+              </select>
+              <label>标题头部样例</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="header_text" type="text" class="validate" v-model="header_text">
+              <label for="header_text">自定义标题头部</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="test-swipe-2" class="col s12">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <select id="footer">
+                <option value="" disabled selected>选择标题尾部</option>
+                <option v-for="choice in footer_choices" v-bind:value="choice.text">{{ choice.text }}</option>
+              </select>
+              <label>标题尾部样例</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="例如：10个%person%的%thing%" id="footer_text" type="text" class="validate" v-model="footer_text">
+              <label for="footer_text">自定义标题尾部（格式：%person% 代表人物，%thing% 代表事件或物品）</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="test-swipe-3" class="col s12">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="爱迪生" id="person" type="text" class="validate" v-model="person">
+              <label for="person">新闻人物</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="长寿秘籍" id="thing" type="text" class="validate" v-model="thing">
+              <label for="thing">新闻事件或物品</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>生成结果</h4>
+        <p>{{ result }}</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+        $('.button-collapse').sideNav({
+            menuWidth: 300,
+            edge: 'left',
+            closeOnClick: true,
+            draggable: true
+          }
+        );
+        $('.tabs').tabs();
+        $('.tabs').get(0).swipeable = true;
+        $('.modal').modal();
+        $('select#header').change(function(){
+          $('input#header_text').val($(this).val());
+          $('input#header_text').change();
+        });
+        $('select#footer').change(function(){
+          $('input#footer_text').val($(this).val());
+          $('input#footer_text').change();
+        });
+    });
+  </script>
+  <script>
+	 new Vue({
+     el: '#app',
+     data: {
+       title: '震惊标题起名系统',
+       menus: [
+         { text: '作者微博', link: 'http://weibo.com/fython'},
+         { text: 'Github Source', link: 'https://github.com/fython/WhatTheUC' }
+       ],
+       exclamation: '震惊！',
+       header_text: '',
+       header_choices: [
+         { text: '有图有真相，'},
+         { text: '你一定没看过，'},
+         { text: '让专家跌破眼镜，'},
+         { text: '不转不是中国人！'},
+         { text: '值得收藏一辈子的秘密，'},
+         { text: '从未被揭发的新闻，'},
+         { text: '不看后悔，'},
+         { text: '整整流传两个世纪，'},
+         { text: '中国人都转疯了，'},
+         { text: '女人看了流泪男人看了沉默，'},
+         { text: '你一定要看到最后！'},
+         { text: '不可告人的秘密，'},
+         { text: '全场的观众都崩溃了！'},
+         { text: '看到最后我撑不下去了，'},
+         { text: '日本女优来到中国的第一件事，'},
+         { text: '诡异的视觉陷阱，'}
+       ],
+       footer_text: '',
+       footer_choices: [
+         { text: '10个%person%的%thing%'},
+         { text: '全球7大%thing%'},
+         { text: '%person%竟然%thing%'},
+         { text: '网红%person%离奇%thing%'},
+         { text: '一条让所有人恐惧的%thing%'},
+         { text: '当%person%遭遇%thing%'},
+         { text: '%person%看了都%thing%'},
+         { text: '%person%%thing%'}
+       ],
+       person: '爱迪生',
+       thing: '长寿秘籍',
+       result: 'Test'
+     },
+     methods: {
+       get_result: function (event) {
+         var newText = this.exclamation;
+         newText += this.header_text;
+         newText += this.footer_text;
+
+         if (newText.search(/%person%/g) != -1) {
+           newText = newText.slice(0, newText.search(/%person%/g))
+           + this.person + newText.slice(newText.search(/%person%/g) + 8, newText.length);
+         }
+         if (newText.search(/%thing%/g) != -1) {
+           newText = newText.slice(0, newText.search(/%thing%/g))
+           + this.thing + newText.slice(newText.search(/%thing%/g) + 7, newText.length);
+         }
+         console.log(newText);
+
+         this.result = newText;
+       }
+     }
+   })
+   </script>
+</body>
+</html>
