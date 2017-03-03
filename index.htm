@@ -16,16 +16,16 @@
 
     <nav class="nav-extended">
     <div class="nav-wrapper purple darken-4">
-      <a href="#" class="brand-logo">{{ title }}</a>
+      <a href="#" class="brand-logo" v-text="title">{{ title }}</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li v-for="menu in menus">
-          <a href="{{ menu.link }}">{{ menu.text }}</a>
+          <a href="{{ menu.link }}" v-text="menu.text">{{ menu.text }}</a>
         </li>
       </ul>
       <ul class="side-nav" id="mobile-demo">
         <li v-for="menu in menus">
-          <a href="{{ menu.link }}">{{ menu.text }}</a>
+          <a href="{{ menu.link }}" v-text="menu.text">{{ menu.text }}</a>
         </li>
       </ul>
     </div>
@@ -57,13 +57,13 @@
             <div class="input-field col s12">
               <select id="header">
                 <option value="" disabled selected>选择标题头部</option>
-                <option v-for="choice in header_choices" v-bind:value="choice.text">{{ choice.text }}</option>
+                <option v-for="choice in header_choices" v-bind:value="choice.text" v-text="choice.text">{{ choice.text }}</option>
               </select>
               <label>标题头部样例</label>
             </div>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
+          <div class="row custom-row">
+            <div class="input-field col s12 custom-input-field">
               <input placeholder="" id="header_text" type="text" class="validate" v-model="header_text">
               <label for="header_text">自定义标题头部</label>
             </div>
@@ -77,13 +77,13 @@
             <div class="input-field col s12">
               <select id="footer">
                 <option value="" disabled selected>选择标题尾部</option>
-                <option v-for="choice in footer_choices" v-bind:value="choice.text">{{ choice.text }}</option>
+                <option v-for="choice in footer_choices" v-bind:value="choice.text" v-text="choice.text">{{ choice.text }}</option>
               </select>
               <label>标题尾部样例</label>
             </div>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
+          <div class="row custom-row">
+            <div class="input-field col s12 custom-input-field">
               <input placeholder="例如：10个%person%的%thing%" id="footer_text" type="text" class="validate" v-model="footer_text">
               <label for="footer_text">自定义标题尾部（格式：%person% 代表人物，%thing% 代表事件或物品）</label>
             </div>
@@ -113,7 +113,7 @@
     <div id="modal1" class="modal bottom-sheet">
       <div class="modal-content">
         <h4>生成结果</h4>
-        <p>{{ result }}</p>
+        <p v-text="result">{{ result }}</p>
       </div>
       <div class="modal-footer">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
@@ -207,7 +207,38 @@
          this.result = newText;
        }
      }
-   })
+   });
+
+   // 如果是移动端浏览器，则将 列表 改为浏览器默认样式。
+   // 为了跟框架的样式更搭一点，小修改了默认样式。
+   if (/AppleWebKit.*Mobile/i.test(navigator.userAgent)) {
+
+     $("#header, #footer")
+       .addClass("browser-default")
+       .css({
+         "padding": "0px",
+         "outline": "none",
+         "border": "none",
+         "border-bottom": "1px solid #9e9e9e"
+       });
+
+     $("#header +label, #footer +label")
+       .css({
+         "top": "-1rem",
+         "font-size": "0.8rem"
+       });
+
+     $(".custom-row")
+       .css({
+         "position": "relative"
+       });
+
+     $(".custom-input-field")
+       .css({
+         "top": "1.6rem"
+       });
+   }
+
    </script>
 </body>
 </html>
